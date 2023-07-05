@@ -105,4 +105,4 @@ deploy:
   type: git
   repo: git@github.com:SelfObserver/selfobserver.github.io.git
   branch: master
-  message: Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }})
+  message: uodate mynotebook
