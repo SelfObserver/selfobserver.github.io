@@ -1,0 +1,16 @@
+highlight_theme: darker
+highlight_copy: true
+# A simple 404 page
+error_404:
+  enable: true
+  subtitle: "頁面沒有找到"
+  
+avatar:
+  img: /images/avatar.png
+busuanzi:
+  site_uv: true
+  site_pv: true
+  page_pv: true
+  
+readmode: true  
+   
