@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>逃逸分析 | Hexo</title>
+  <title>逃逸 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Java 中的逃逸分析是一种在运行时分析对象的生命周期和作用域的技术。它的目标是识别出对象的使用方式，从而确定对象是否可以分配在栈上而不是在堆上，或者是否可以进行其他优化 方法逃逸方法逃逸：在一个方法体内，定义了一个局部变量，而它可能被外部方法引用，比如作为调用参数传递给方法，或则作为对象直接返回。或则可以理解成对象跳出了方法。 返回值为非字符串对象提示：这里讨论的重点是某个对象，是否发生方法逃逸">
+  <meta name="description" content="逃逸分为两类：方法逃逸和线程逃逸 方法逃逸方法逃逸：在一个方法体内，定义了一个局部变量，而它可能被外部方法引用，比如作为调用参数传递给方法，或则作为对象直接返回。方法逃逸发生时，一个本应该在方法内部使用和销毁的对象，却被方法之外的代码所持有，导致其超出了原本的作用范围。 提示：这里讨论的重点是某个对象，是否发生方法逃逸。以及可能被外部方法引用，如果外部方法都不引用，是不会发生方法逃逸的 作为参数1">
 <meta property="og:type" content="article">
-<meta property="og:title" content="逃逸分析">
+<meta property="og:title" content="逃逸">
 <meta property="og:url" content="http://example.com/2023/07/05/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Java 中的逃逸分析是一种在运行时分析对象的生命周期和作用域的技术。它的目标是识别出对象的使用方式，从而确定对象是否可以分配在栈上而不是在堆上，或者是否可以进行其他优化 方法逃逸方法逃逸：在一个方法体内，定义了一个局部变量，而它可能被外部方法引用，比如作为调用参数传递给方法，或则作为对象直接返回。或则可以理解成对象跳出了方法。 返回值为非字符串对象提示：这里讨论的重点是某个对象，是否发生方法逃逸">
+<meta property="og:description" content="逃逸分为两类：方法逃逸和线程逃逸 方法逃逸方法逃逸：在一个方法体内，定义了一个局部变量，而它可能被外部方法引用，比如作为调用参数传递给方法，或则作为对象直接返回。方法逃逸发生时，一个本应该在方法内部使用和销毁的对象，却被方法之外的代码所持有，导致其超出了原本的作用范围。 提示：这里讨论的重点是某个对象，是否发生方法逃逸。以及可能被外部方法引用，如果外部方法都不引用，是不会发生方法逃逸的 作为参数1">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-07-05T09:39:29.662Z">
-<meta property="article:modified_time" content="2023-07-05T09:19:24.876Z">
+<meta property="article:modified_time" content="2023-07-06T02:22:35.962Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -89,7 +89,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      逃逸分析
+      逃逸
     </h1>
   
 
@@ -97,32 +97,48 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>Java 中的逃逸分析是一种在运行时分析对象的生命周期和作用域的技术。它的目标是识别出对象的使用方式，从而确定对象是否可以分配在栈上而不是在堆上，或者是否可以进行其他优化</p>
-<h2 id="方法逃逸"><a href="#方法逃逸" class="headerlink" title="方法逃逸"></a>方法逃逸</h2><p>方法逃逸：在一个方法体内，定义了一个局部变量，而它可能被外部方法引用，比如作为调用参数传递给方法，或则作为对象直接返回。或则可以理解成对象跳出了方法。</p>
-<h3 id="返回值为非字符串对象"><a href="#返回值为非字符串对象" class="headerlink" title="返回值为非字符串对象"></a>返回值为非字符串对象</h3><p>提示：这里讨论的重点是<strong>某个对象</strong>，是否发生方法逃逸。以及可能被外部方法<strong>引用</strong>，如果外部方法都不引用，是不会发送方法逃逸的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> A <span class="title function_">getA</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">A</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>逃逸分为两类：方法逃逸和线程逃逸</p>
+<h2 id="方法逃逸"><a href="#方法逃逸" class="headerlink" title="方法逃逸"></a>方法逃逸</h2><p>方法逃逸：在一个方法体内，定义了一个局部变量，而它可能被外部方法引用，比如<strong>作为调用参数传递给方法</strong>，或则<strong>作为对象直接返回</strong>。方法逃逸发生时，一个本应该在方法内部使用和销毁的对象，却被方法之外的代码所持有，导致其超出了原本的作用范围。</p>
+<p><strong>提示</strong>：这里讨论的重点是<strong>某个对象</strong>，是否发生方法逃逸。以及可能被外部方法<strong>引用</strong>，如果外部方法都不引用，是不会发生方法逃逸的</p>
+<h3 id="作为参数"><a href="#作为参数" class="headerlink" title="作为参数"></a>作为参数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">A</span> <span class="variable">b</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setB</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 定义了一个局部变量 a</span></span><br><span class="line">    <span class="type">A</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">    <span class="comment">// 作为参数传递给 doSomething 函数</span></span><br><span class="line">    doSomething(a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doSomething(A a)&#123;</span><br><span class="line">    b=a; <span class="comment">// 将 a 赋值给 b</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>a 对象方法逃逸，setB() 方法执行完毕后，a 对象没有被销毁，而是赋值给b对象，导致其超出了原本的作用范围。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">A</span> <span class="variable">b</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setB</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 定义了一个局部变量 a</span></span><br><span class="line">    <span class="type">A</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">    <span class="comment">// 作为参数传递给 doSomething 函数</span></span><br><span class="line">    doSomething(a);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doSomething(A a)&#123;</span><br><span class="line">    <span class="comment">// 什么也不做</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>a 对象没有方法逃逸，setB() 方法执行完毕后，a 对象被销毁</p>
+<h3 id="作为返回值"><a href="#作为返回值" class="headerlink" title="作为返回值"></a>作为返回值</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> A <span class="title function_">getA</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">A</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面的代码 a 可能被外部方法引用，a 可能发生方法逃逸</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> A <span class="title function_">getA</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">A</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">    <span class="comment">// 注意这里是深拷贝，a 和 b 是2个对象</span></span><br><span class="line">    <span class="type">A</span> <span class="variable">b</span> <span class="operator">=</span> a.clone();</span><br><span class="line">    <span class="keyword">return</span> b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> A <span class="title function_">getA</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">A</span> <span class="variable">a</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">    <span class="comment">// 注意这里是深拷贝，a 和 b 是2个对象</span></span><br><span class="line">    <span class="type">A</span> <span class="variable">b</span> <span class="operator">=</span> a.clone();</span><br><span class="line">    <span class="keyword">return</span> b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面的代码 a 不会被外部方法引用，a 不会发生方法逃逸</p>
 <p>上面的代码 b 可能被外部方法引用，b 可能发生方法逃逸</p>
 <h3 id="返回值为字符串对象"><a href="#返回值为字符串对象" class="headerlink" title="返回值为字符串对象"></a>返回值为字符串对象</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> StringBuffer <span class="title function_">append</span><span class="params">(String apple,String pear)</span>&#123;</span><br><span class="line">   StringBuffer buffer=<span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line">   buffer.append(apple);</span><br><span class="line">   buffer.append(pear);</span><br><span class="line">   <span class="keyword">return</span> buffer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>上面的方法返回了对象的引用，为了解决这个问题，返回值是 String。这里可以说 buffer 对象没有发生方法逃逸，<br>在 Java 中，字符串是不可变的对象，这意味着一旦字符串对象被创建，它的值就不可修改。当我们对字符串进行修改时，实际上是创建了一个新的字符串对象。<br>字符串对象没有发生方法逃逸，并且保持了不可变的特性。</p>
+<p>上面的方法返回了对象的引用，buffer 可能发生方法逃逸<br>为了解决这个问题，我们将返回值设置成 String 类型。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> string <span class="title function_">append</span><span class="params">(String apple,String pear)</span>&#123;</span><br><span class="line">   StringBuffer buffer=<span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line">   buffer.append(apple);</span><br><span class="line">   buffer.append(pear);</span><br><span class="line">   <span class="keyword">return</span> buffer.toString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="对象逃逸"><a href="#对象逃逸" class="headerlink" title="对象逃逸"></a>对象逃逸</h2><p>指在对象未完全构造完成之前，它的引用被其他代码所获取并使用，因此其他代码可能会访问到对象的不一致状态</p>
+<p>在 Java 中，字符串是不可变的对象，这意味着一旦字符串对象被创建，它的值就不可修改。当我们对字符串进行修改时，实际上是创建了一个新的字符串对象。字符串对象不会发生方法逃逸。</p>
+<h3 id="对象逃逸-方法逃逸的一种特殊情况"><a href="#对象逃逸-方法逃逸的一种特殊情况" class="headerlink" title="对象逃逸(方法逃逸的一种特殊情况)"></a>对象逃逸(方法逃逸的一种特殊情况)</h3><p>指在对象未完全构造完成之前，它的引用被其他代码所获取并使用，因此其他代码可能会访问到对象的不一致状态</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EscapeExample</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> value;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">EscapeExample</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 构造函数</span></span><br><span class="line">        <span class="type">SomeClass</span> <span class="variable">someObject</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SomeClass</span>();</span><br><span class="line">        someObject.setValue(<span class="number">10</span>);</span><br><span class="line">        <span class="built_in">this</span>.value = someObject.getValue(); <span class="comment">// (1) 对象逃逸</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getValue</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> value;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">EscapeExample</span> <span class="variable">example</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">EscapeExample</span>();</span><br><span class="line">        System.out.println(example.getValue()); <span class="comment">// (2) 在对象未完全构造完成之前访问值</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>在上面的示例中，我们有一个 EscapeExample 类和一个 SomeClass 类。在 EscapeExample 类的构造函数中，我们创建了一个 SomeClass 的实例，并把其值赋给 value 字段。注意到在构造函数中的这行代码 (1)，这里发生了对象逃逸，因为我们在对象尚未构造完成之前，将其引用传递给了字段 value。</p>
 <p>在 main 方法中，我们创建了一个 EscapeExample 实例，并调用了它的 getValue 方法来获取 value 字段的值。这里 (2) 发生了在对象尚未完全构造完成之前访问 value 的情况，可能会导致值的不一致或异常结果。</p>
 <p>对象逃逸可能会导致线程安全问题、错误的业务逻辑或其它潜在的问题。为避免对象逃逸，可以将对象的构造过程完全封装在类内部，避免在对象构造期间发布对象引用。</p>
+<h2 id="线程逃逸"><a href="#线程逃逸" class="headerlink" title="线程逃逸"></a>线程逃逸</h2><p>线程逃逸（thread escape）是指一个对象在多线程环境中，其生命周期超出了原始预期的范围，被意外地传递到其他线程中使用。换句话说，线程逃逸发生时，本应该被限制在某个特定线程中的对象被其他线程引用或访问，从而使得该对象的可见性和安全性无法得到保证。</p>
+<p>当一个对象还没有构造完成时，它的引用就被传递到另一个线程中。这可能导致另一个线程在对象构造期间访问到不稳定的状态或未初始化的字段。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">ThreadEscapeExample</span><span class="params">()</span> &#123;</span><br><span class="line">      <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">          <span class="meta">@Override</span></span><br><span class="line">          <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">              <span class="comment">// 在新线程中访问 list</span></span><br><span class="line">              System.out.println(list.size());</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;).start();</span><br><span class="line">      list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">      list.add(<span class="number">1</span>);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>当调用 ThreadEscapeExample() 构造方法时，会创建一个新的线程，并在该线程中访问 list 的大小（list.size()）。</p>
+<p>然而，在创建新线程之前，构造方法继续执行，初始化了 list 并向其中添加了一个元素。</p>
+<p>在这种情况下，由于对象的构造过程并没有被完全串行化，存在着 main 线程和新线程都有可能先执行的不确定性。</p>
+<p>如果新线程在 main 线程将 list 初始化完成之前执行，就会引发线程逃逸问题。因为新线程访问的是一个尚未完全初始化的 list 对象，可能导致未定义的行为或数据不一致。</p>
+<h2 id="逃逸分析"><a href="#逃逸分析" class="headerlink" title="逃逸分析"></a>逃逸分析</h2><p>Java 中的逃逸分析是一种在运行时分析对象的生命周期和作用域的技术。它的目标是识别出对象的使用方式，从而确定对象是否可以分配在栈上而不是在堆上，或者是否可以进行其他优化</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/07/05/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" data-id="cljpj2cy60002k0uf3rvcfjnz" data-title="逃逸分析" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="http://example.com/2023/07/05/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/" data-id="cljqiwvp20000zcuf9cye236i" data-title="逃逸" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -130,16 +146,6 @@
   </div>
   
     
-<nav id="article-nav">
-  
-  
-    <a href="/2023/07/05/mynew/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">mynew</div>
-    </a>
-  
-</nav>
-
   
 </article>
 
@@ -173,15 +179,7 @@
       <ul>
         
           <li>
-            <a href="/2023/07/05/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/">逃逸分析</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/05/mynew/">mynew</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/05/hello-world/">Hello World</a>
+            <a href="/2023/07/05/%E9%80%83%E9%80%B8%E5%88%86%E6%9E%90/">逃逸</a>
           </li>
         
       </ul>
