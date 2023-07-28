@@ -55,7 +55,7 @@ systemctl start docker
 docker run hello-world
 ```
 
-![docker-helloworld](./img/docker-helloworld.png)
+![docker-helloworld](../images/docker-helloworld.png)
 
 ## 官方文档安装 Docker (CE)
 
